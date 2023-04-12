@@ -2,15 +2,17 @@ var searchBtn = document.querySelector("#search-btn");
 
 
 searchBtn.addEventListener("click", function (event) {
-    event.preventDefault()
+    event.preventDefault();
     var city = document.querySelector("#city").value;
-    var previousSearch = JSON.parse(localStorage.getItem("weather")) || []
-    previousSearch.push(city)
-    localStorage.setItem("weather", JSON.stringify(previousSearch))
+    var previousSearch = JSON.parse(localStorage.getItem("weather")) || [];
+    previousSearch.push(city);
+    localStorage.setItem("weather", JSON.stringify(previousSearch));
+
 
     console.log("searching for city", city)
     fiveDayForecast(city)
     currentDayForecast(city)
+    postLocalStorage()
 });
 
 
@@ -70,3 +72,23 @@ function currentDayForecast(city) {
     })
 };
 
+function postLocalStorage(){
+    var previousSearch = JSON.parse(localStorage.getItem("weather")) || []
+    var htmlButton =""
+    for (let i = 0; i < previousSearch.length; i++) {
+       htmlButton+= `<button type="button" class="btn btn-primary previousSearchbtn"> ${previousSearch[i]}</button>`
+    }
+    document.querySelector(".previous-search").innerHTML = htmlButton;
+    var btnsEvtList = document.querySelectorAll(".previousSearchbtn")
+    btnsEvtList.forEach(element => element.addEventListener("click",btnClick))
+}
+postLocalStorage()
+
+
+function btnClick(event) {
+    event.preventDefault()
+    var city = event.target.textContent;
+    fiveDayForecast(city)
+    currentDayForecast(city)
+    console.log("city");
+}
